@@ -1,5 +1,7 @@
 package com.booking.recruitment.hotel.model;
 
+import com.booking.recruitment.hotel.dto.HotelDto;
+import com.booking.recruitment.hotel.model.mapper.HotelMapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -203,4 +205,9 @@ public class Hotel implements Serializable {
       return new Hotel(id, name, rating, city, address, latitude, longitude, deleted);
     }
   }
+
+  public HotelDto toDto() {
+    return HotelMapper.INSTANCE.toHotelDto(this);
+  }
+
 }

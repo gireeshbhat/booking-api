@@ -1,14 +1,16 @@
 package com.booking.recruitment.hotel.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.booking.recruitment.hotel.exception.BadRequestException;
+import com.booking.recruitment.hotel.exception.ElementNotFoundException;
 import com.booking.recruitment.hotel.model.Hotel;
 import com.booking.recruitment.hotel.repository.HotelRepository;
 import com.booking.recruitment.hotel.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 class DefaultHotelService implements HotelService {
@@ -30,6 +32,21 @@ class DefaultHotelService implements HotelService {
         .filter((hotel) -> cityId.equals(hotel.getCity().getId()))
         .collect(Collectors.toList());
   }
+
+    @Override
+    public Optional<Hotel> getHotelByHotelId(Long hotelId) {
+        return hotelRepository.findById(hotelId);
+    }
+
+    @Override
+    public void deleteHotelById(Long hotelId) {
+        Optional<Hotel> optionalHotel = hotelRepository.findById(hotelId);
+        if (optionalHotel.isPresent()) {
+            hotelRepository.deleteById(optionalHotel.get().getId());
+        } else {
+            throw new ElementNotFoundException("Could not find hotel with ID provided");
+        }
+    }
 
   @Override
   public Hotel createNewHotel(Hotel hotel) {
